@@ -1,4 +1,4 @@
-CREATE TABLE players (
+CREATE TABLE player (
   id INT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(255),
   first_name VARCHAR(255),
@@ -8,7 +8,7 @@ CREATE TABLE players (
   gender VARCHAR(10)
 );
 
-CREATE TABLE games (
+CREATE TABLE game (
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255),
   description TEXT,
@@ -16,11 +16,11 @@ CREATE TABLE games (
   rating FLOAT
 );
 
-CREATE TABLE playtime (
+CREATE TABLE player_game_hours (
   id INT PRIMARY KEY AUTO_INCREMENT,
   player_id INT,
   game_id INT,
   hours_played FLOAT,
-  FOREIGN KEY (player_id) REFERENCES players(id),
-  FOREIGN KEY (game_id) REFERENCES games(id)
+  FOREIGN KEY (player_id) REFERENCES player(id),
+  FOREIGN KEY (game_id) REFERENCES game(id)
 );

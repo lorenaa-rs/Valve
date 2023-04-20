@@ -44,4 +44,8 @@ public class PlayerGameHoursService {
         return true;
     }
 
+    public void addPlayerGameHours(Long playerId, Long gameId, Integer hours) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }
