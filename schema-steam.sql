@@ -1,4 +1,4 @@
-CREATE TABLE player (
+CREATE TABLE player(
   id INT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(255),
   first_name VARCHAR(255),
@@ -8,7 +8,7 @@ CREATE TABLE player (
   gender VARCHAR(10)
 );
 
-CREATE TABLE game (
+CREATE TABLE game(
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255),
   description TEXT,
@@ -16,7 +16,7 @@ CREATE TABLE game (
   rating FLOAT
 );
 
-CREATE TABLE player_game_hours (
+CREATE TABLE player_game_hours(
   id INT PRIMARY KEY AUTO_INCREMENT,
   player_id INT,
   game_id INT,
