@@ -1,7 +1,7 @@
 package com.valve.api.repositories;
 
 import com.valve.api.dto.*;
-import com.valve.api.entities.PlayerGameHours;
+import com.valve.api.entities.*;
 import java.util.List;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
@@ -28,20 +28,23 @@ public interface PlayerGameHoursRepository extends JpaRepository<PlayerGameHours
     List<TopGameForPlayerDto> findTop10GamesByPlayerIdOrderByHoursDesc(@Param("playerId") Long playerId);
 
     @Query("SELECT NEW com.valve.api.dto.TopGamesDto(g.name, CAST(SUM(p.hours) AS int)) "
-        + "FROM PlayerGameHours p "
-        + "JOIN p.game g "
-        + "GROUP BY g.id, g.name "
-        + "ORDER BY SUM(p.hours) DESC")
+            + "FROM PlayerGameHours p "
+            + "JOIN p.game g "
+            + "GROUP BY g.id, g.name "
+            + "ORDER BY SUM(p.hours) DESC")
     List<TopGamesDto> findTop10GamesByHoursDesc();
-    
+
     @Query("SELECT NEW com.valve.api.dto.TopPlayersDto(p.player.username, CAST(SUM(p.hours) AS int)) "
             + "FROM PlayerGameHours p "
             + "GROUP BY p.player.id, p.player.username "
             + "ORDER BY SUM(p.hours) DESC")
     List<TopPlayersDto> findTop10PlayersByHoursDesc();
 
+    @Modifying
+    @Query("DELETE FROM PlayerGameHours pgh"
+            + " WHERE pgh.player = :player "
+            + "AND pgh.game = :game")
+    void deleteByPlayerAndGame(@Param("player") Player player, @Param("game") Game game);
 
-
-
-
+   PlayerGameHours findByPlayerAndGame(Player player, Game game);
 }

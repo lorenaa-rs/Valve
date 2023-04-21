@@ -1,5 +1,6 @@
 package com.valve.api.controller;
 
+import com.valve.api.dto.PlayerGameHoursDto;
 import com.valve.api.dto.*;
 import com.valve.api.entities.*;
 import com.valve.api.services.*;
@@ -12,25 +13,41 @@ import org.springframework.web.bind.annotation.*;
 public class PlayerGameHoursController {
 
     private final PlayerGameHoursService playerGameHourService;
+    private final PlayerService playerService;
+    private final GameService gameService;
 
-    public PlayerGameHoursController(PlayerGameHoursService playerGameHourService) {
+    public PlayerGameHoursController(PlayerGameHoursService playerGameHourService, PlayerService playerService, GameService gameService) {
         this.playerGameHourService = playerGameHourService;
+        this.playerService = playerService;
+        this.gameService = gameService;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> addPlayerGameHours(@RequestBody PlayerGameHours playerGameHours) {
-        playerGameHourService.createPlayerGameHours(playerGameHours);
+    public ResponseEntity<?> addPlayerGameHours(@RequestBody PlayerGameHoursDto playerGameHoursDTO) {
+        PlayerGameHours playerGameHours = new PlayerGameHours();
+        playerGameHours.setHours(playerGameHoursDTO.getHours());
+        playerGameHours.setPlayer(playerService.getPlayerById(playerGameHoursDTO.getPlayerId()));
+        playerGameHours.setGame(gameService.getGameById(playerGameHoursDTO.getGameId()));
+        playerGameHourService.createPlayerGameHours(playerGameHours.getPlayer(), playerGameHours.getGame(), playerGameHours.getHours());
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/update/{id}")
-    public PlayerGameHours updatePlayerGameHours(@PathVariable Long id, @RequestBody PlayerGameHours playergameHours) {
-        return playerGameHourService.updatePlayerGameHours(id, playergameHours);
+    @DeleteMapping("/delete")
+    public ResponseEntity<Integer> deletePlayerGameHours(@RequestBody PlayerGameHoursDto playerGameHoursDTO) {
+
+        Player player = playerService.getPlayerById(playerGameHoursDTO.getPlayerId());
+        Game game = gameService.getGameById(playerGameHoursDTO.getGameId());
+        Integer totalHours = playerGameHourService.deletePlayerGameHours(player, game, playerGameHoursDTO.getHours());
+        return ResponseEntity.ok(totalHours);
     }
 
-    @DeleteMapping("/{id}")
-    public void deletePlayerGameHours(@PathVariable Long id) {
-        playerGameHourService.deletePlayerGameHours(id);
+    @PutMapping("/updateHours")
+    public ResponseEntity<Integer> updateHours(@RequestBody PlayerGameHoursDto playerGameHoursDTO) {
+
+        Player player = playerService.getPlayerById(playerGameHoursDTO.getPlayerId());
+        Game game = gameService.getGameById(playerGameHoursDTO.getGameId());
+        Integer totalHours = playerGameHourService.updateHours(player, game, playerGameHoursDTO.getHours());
+        return ResponseEntity.ok(totalHours);
     }
 
     @GetMapping("/top10players/{gameName}")
@@ -40,21 +57,21 @@ public class PlayerGameHoursController {
     }
 
     @GetMapping("/top10games/{playerId}")
-   public ResponseEntity<List<TopGameForPlayerDto>> getTop10GamesByPlayerId(@PathVariable Long playerId){
+    public ResponseEntity<List<TopGameForPlayerDto>> getTop10GamesByPlayerId(@PathVariable Long playerId) {
         List<TopGameForPlayerDto> topGameList = playerGameHourService.getTop10GamesByPlayerId(playerId);
         return ResponseEntity.ok(topGameList);
-   }
-   
+    }
+
     @GetMapping("/top10games")
-   public ResponseEntity<List<TopGamesDto>> getTop10Games(){
+    public ResponseEntity<List<TopGamesDto>> getTop10Games() {
         List<TopGamesDto> topGameList = playerGameHourService.getTop10Games();
         return ResponseEntity.ok(topGameList);
-   }
-   
-   @GetMapping("/top10players")
-   public ResponseEntity<List<TopPlayersDto>> getTop10Players(){
+    }
+
+    @GetMapping("/top10players")
+    public ResponseEntity<List<TopPlayersDto>> getTop10Players() {
         List<TopPlayersDto> topPlayersList = playerGameHourService.getTop10players();
         return ResponseEntity.ok(topPlayersList);
-   }
+    }
 
 }
