@@ -1,11 +1,8 @@
 package com.valve.api.controller;
 
 import com.valve.api.entities.Game;
-import com.valve.api.entities.Player;
 import com.valve.api.services.GameService;
-import com.valve.api.services.PlayerService;
 import java.util.List;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,13 +30,4 @@ public class GameController {
         return gameService.createGame(game);
     }
 
-    @PutMapping("/games/{id}")
-    public Game updateGame(@PathVariable Long id, @RequestBody Game game) {
-        return gameService.updateGame(id, game);
-    }
-
-    @DeleteMapping("/games/{id}")
-    public void deleteGame(@PathVariable Long id) {
-        gameService.deleteGame(id);
-    }
 }

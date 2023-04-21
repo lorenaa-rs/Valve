@@ -37,13 +37,4 @@ public class PlayerController {
         return playerService.createPlayer(player);
     }
 
-    @PutMapping("/players/{id}")
-    public Player updatePlayer(@PathVariable Long id, @RequestBody Player player) {
-        return playerService.updatePlayer(id, player);
-    }
-
-    @DeleteMapping("/players/{id}")
-    public void deletePlayer(@PathVariable Long id) {
-        playerService.deletePlayer(id);
-    }
 }

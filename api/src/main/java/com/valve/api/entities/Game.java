@@ -61,5 +61,12 @@ private Double rating;
         this.rating = rating;
     }
 
+    public Game(String name) {
+        this.name = name;
+    }
+
+    public Game() {
+    }
+
 
 }
