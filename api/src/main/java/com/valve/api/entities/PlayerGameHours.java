@@ -19,6 +19,7 @@ private Player player;
 @JoinColumn(name = "game_id", nullable = false)
 private Game game;
 
+
     public Long getId() {
         return id;
     }

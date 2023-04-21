@@ -3,9 +3,7 @@ package com.valve.api.controller;
 import com.valve.api.dto.PlayerGameHoursDto;
 import com.valve.api.entities.*;
 import com.valve.api.services.*;
-import java.awt.print.Pageable;
 import java.util.List;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -5,6 +5,7 @@ import com.valve.api.entities.Game;
 import com.valve.api.entities.PlayerGameHours;
 import com.valve.api.repositories.GameRepository;
 import com.valve.api.repositories.PlayerGameHoursRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -62,8 +63,9 @@ public class PlayerGameHoursService {
     @Transactional
     public List<PlayerGameHoursDto> getTop10PlayersByGame(String gameName) {
         Game game = gameRepository.findByName(gameName);
-        List<PlayerGameHours> playerGameHoursList = playerGameHoursRepository.findTop10ByGameOrderByHoursDesc(game);
-        return playerGameHoursList.stream().map(PlayerGameHoursDto::new).collect(Collectors.toList());
+        List<PlayerGameHoursDto> playerGameHoursList = playerGameHoursRepository.findTop10PlayersSumHoursByGameOrderByHoursDesc(game.getId())
+                .subList(0, 10);
+        return playerGameHoursList;
     }
 
 }
