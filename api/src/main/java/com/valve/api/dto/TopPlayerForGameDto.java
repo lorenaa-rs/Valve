@@ -20,8 +20,7 @@ public class TopPlayerForGameDto {
         this.hours = playerGameHours.getHours();
     }
 
-    // Métodos getters y setters
-
+    
     public String getPlayerName() {
         return playerName;
     }

@@ -1,15 +1,9 @@
 package com.valve.api.repositories;
 
-import com.valve.api.dto.TopGameForPlayerDto;
-import com.valve.api.dto.TopPlayerForGameDto;
-import com.valve.api.entities.Game;
-import com.valve.api.entities.Player;
+import com.valve.api.dto.*;
 import com.valve.api.entities.PlayerGameHours;
-import java.awt.print.Pageable;
 import java.util.List;
-import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 public interface PlayerGameHoursRepository extends JpaRepository<PlayerGameHours, Long> {
@@ -33,6 +27,12 @@ public interface PlayerGameHoursRepository extends JpaRepository<PlayerGameHours
             + "ORDER BY SUM(p.hours) DESC")
     List<TopGameForPlayerDto> findTop10GamesByPlayerIdOrderByHoursDesc(@Param("playerId") Long playerId);
 
+    @Query("SELECT NEW com.valve.api.dto.TopGamesDto(g.name, CAST(SUM(p.hours) AS int)) "
+        + "FROM PlayerGameHours p "
+        + "JOIN p.game g "
+        + "GROUP BY g.id, g.name "
+        + "ORDER BY SUM(p.hours) DESC")
+    List<TopGamesDto> findTop10GamesByHoursDesc();
 
 
 }

@@ -1,13 +1,11 @@
 package com.valve.api.controller;
 
 import com.valve.api.dto.TopGameForPlayerDto;
+import com.valve.api.dto.TopGamesDto;
 import com.valve.api.dto.TopPlayerForGameDto;
 import com.valve.api.entities.*;
 import com.valve.api.services.*;
-import java.awt.print.Pageable;
 import java.util.List;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class PlayerGameHoursController {
 
     private final PlayerGameHoursService playerGameHourService;
-    private GameService gameService;
-    private PlayerService playerService;
 
     public PlayerGameHoursController(PlayerGameHoursService playerGameHourService) {
         this.playerGameHourService = playerGameHourService;
@@ -48,6 +44,12 @@ public class PlayerGameHoursController {
     @GetMapping("/top10games/{playerId}")
    public ResponseEntity<List<TopGameForPlayerDto>> getTop10GamesByPlayerId(@PathVariable Long playerId){
         List<TopGameForPlayerDto> topGameList = playerGameHourService.getTop10GamesByPlayerId(playerId);
+        return ResponseEntity.ok(topGameList);
+   }
+   
+    @GetMapping("/top10games")
+   public ResponseEntity<List<TopGamesDto>> getTop10Games(){
+        List<TopGamesDto> topGameList = playerGameHourService.getTop10Games();
         return ResponseEntity.ok(topGameList);
    }
 

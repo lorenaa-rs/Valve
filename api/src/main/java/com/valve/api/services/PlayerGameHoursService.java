@@ -1,22 +1,11 @@
 package com.valve.api.services;
 
-import com.valve.api.dto.TopGameForPlayerDto;
-import com.valve.api.dto.TopPlayerForGameDto;
-import com.valve.api.entities.Game;
-import com.valve.api.entities.Player;
-import com.valve.api.entities.PlayerGameHours;
-import com.valve.api.repositories.GameRepository;
-import com.valve.api.repositories.PlayerGameHoursRepository;
-import com.valve.api.repositories.PlayerRepository;
-import java.awt.print.Pageable;
-import java.util.ArrayList;
+import com.valve.api.dto.*;
+import com.valve.api.entities.*;
+import com.valve.api.repositories.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -91,5 +80,16 @@ public class PlayerGameHoursService {
         return playerGameHoursList.subList(0, 10);
     }
 
+    @Transactional
+    public List<TopGamesDto> getTop10Games() {
+       List<TopGamesDto> playerGameHoursList = playerGameHoursRepository.findTop10GamesByHoursDesc();
+        int numGames = playerGameHoursList.size();
+        if (numGames < 10) {
+            for (int i = numGames; i < 10; i++) {
+                playerGameHoursList.add(new TopGamesDto("", 0));
+            }
+        }
+        return playerGameHoursList.subList(0, 10);
+    }
 
 }
