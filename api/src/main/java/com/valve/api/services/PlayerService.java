@@ -20,8 +20,18 @@ public class PlayerService {
         return playerRepository.findById(id).orElse(null);
     }
 
-    public Player createPlayer(Player player) {
-        return playerRepository.save(player);
+    public String createPlayer(Player player) {
+        if (playerRepository.existsByUsername(player.getUsername())) {
+            return ("Nombre de usuario ya existente.");
+        }
+        if (playerRepository.existsByEmail(player.getEmail())) {
+            return ("Correo electrónico ya existente.");
+        }
+        Player playerAnswer = playerRepository.save(player);
+        if (playerAnswer != null) {
+            return "Usuario registrado correctamente";
+        }
+        return "Error al registrar usuario";
     }
 
     public Player updatePlayer(Long id, Player player) {

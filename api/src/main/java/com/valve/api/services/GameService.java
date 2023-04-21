@@ -20,9 +20,18 @@ public class GameService {
         return gameRepository.findById(id).orElse(null);
     }
 
-    public Game createGame(Game game) {
-        return gameRepository.save(game);
+       public String createGame(Game game) {
+        if (gameRepository.existsByName(game.getName())) {
+            return ("Nombre de juego ya existente.");
+        }
+        Game gameAnswer = gameRepository.save(game);
+        if (gameAnswer != null) {
+            return "Juego registrado correctamente";
+        }
+        return "Error al registrar juego";
     }
+     
+ 
 
     public Game updateGame(Long id, Game game) {
         Game existingGame = gameRepository.findById(id).orElse(null);

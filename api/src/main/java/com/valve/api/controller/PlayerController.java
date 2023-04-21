@@ -25,8 +25,8 @@ public class PlayerController {
         return playerService.getPlayerById(id);
     }
 
-    @PostMapping("/players")
-    public Player createPlayer(@RequestBody Player player) {
+    @PostMapping("/player")
+    public String createPlayer(@RequestBody Player player) {
         return playerService.createPlayer(player);
     }
 
