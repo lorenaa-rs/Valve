@@ -33,6 +33,15 @@ public interface PlayerGameHoursRepository extends JpaRepository<PlayerGameHours
         + "GROUP BY g.id, g.name "
         + "ORDER BY SUM(p.hours) DESC")
     List<TopGamesDto> findTop10GamesByHoursDesc();
+    
+    @Query("SELECT NEW com.valve.api.dto.TopPlayersDto(p.player.username, CAST(SUM(p.hours) AS int)) "
+            + "FROM PlayerGameHours p "
+            + "GROUP BY p.player.id, p.player.username "
+            + "ORDER BY SUM(p.hours) DESC")
+    List<TopPlayersDto> findTop10PlayersByHoursDesc();
+
+
+
 
 
 }

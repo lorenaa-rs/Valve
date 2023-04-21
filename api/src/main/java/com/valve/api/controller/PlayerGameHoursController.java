@@ -1,8 +1,6 @@
 package com.valve.api.controller;
 
-import com.valve.api.dto.TopGameForPlayerDto;
-import com.valve.api.dto.TopGamesDto;
-import com.valve.api.dto.TopPlayerForGameDto;
+import com.valve.api.dto.*;
 import com.valve.api.entities.*;
 import com.valve.api.services.*;
 import java.util.List;
@@ -35,7 +33,7 @@ public class PlayerGameHoursController {
         playerGameHourService.deletePlayerGameHours(id);
     }
 
-    @GetMapping("/top-players/{gameName}")
+    @GetMapping("/top10players/{gameName}")
     public ResponseEntity<List<TopPlayerForGameDto>> getTop10PlayersByGame(@PathVariable String gameName) {
         List<TopPlayerForGameDto> topPlayersList = playerGameHourService.getTop10PlayersByGame(gameName);
         return ResponseEntity.ok(topPlayersList);
@@ -51,6 +49,12 @@ public class PlayerGameHoursController {
    public ResponseEntity<List<TopGamesDto>> getTop10Games(){
         List<TopGamesDto> topGameList = playerGameHourService.getTop10Games();
         return ResponseEntity.ok(topGameList);
+   }
+   
+   @GetMapping("/top10players")
+   public ResponseEntity<List<TopPlayersDto>> getTop10Players(){
+        List<TopPlayersDto> topPlayersList = playerGameHourService.getTop10players();
+        return ResponseEntity.ok(topPlayersList);
    }
 
 }

@@ -92,4 +92,15 @@ public class PlayerGameHoursService {
         return playerGameHoursList.subList(0, 10);
     }
 
+   @Transactional
+    public List<TopPlayersDto> getTop10players() {
+       List<TopPlayersDto> playerGameHoursList = playerGameHoursRepository.findTop10PlayersByHoursDesc();
+        int numGames = playerGameHoursList.size();
+        if (numGames < 10) {
+            for (int i = numGames; i < 10; i++) {
+                playerGameHoursList.add(new TopPlayersDto("", 0));
+            }
+        }
+        return playerGameHoursList.subList(0, 10);
+    }
 }

@@ -19,6 +19,18 @@ private Player player;
 @JoinColumn(name = "game_id", nullable = false)
 private Game game;
 
+    public PlayerGameHours() {
+    }
+
+    public PlayerGameHours(Long id, Integer hours, Player player, Game game) {
+        this.id = id;
+        this.hours = hours;
+        this.player = player;
+        this.game = game;
+    }
+
+
+
 
     public Long getId() {
         return id;
