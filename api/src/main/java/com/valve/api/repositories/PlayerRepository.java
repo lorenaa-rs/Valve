@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
     List<Player> findByUsername(String username);
+    Player getByUsername(String username);
 
     Player getPlayerById(Long idPlayer);
 

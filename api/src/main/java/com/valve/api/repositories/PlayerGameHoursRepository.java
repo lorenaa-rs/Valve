@@ -11,6 +11,7 @@ public interface PlayerGameHoursRepository extends JpaRepository<PlayerGameHours
     List<PlayerGameHours> findByPlayerId(Long playerId);
 
     List<PlayerGameHours> findByGameId(Long gameId);
+    
 
     @Query("SELECT NEW com.valve.api.dto.TopPlayerForGameDto(p.player.firstName, CAST(SUM(p.hours) AS int))\n"
             + "FROM com.valve.api.entities.PlayerGameHours p \n"

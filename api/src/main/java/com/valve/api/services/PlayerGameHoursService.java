@@ -34,14 +34,12 @@ public class PlayerGameHoursService {
     public void createPlayerGameHours(Player player, Game game, Integer hours) {
     PlayerGameHours existingRecord = getPlayerGameHours(player, game);
     if (existingRecord == null) {
-        // Si no existe un registro, se crea uno nuevo
         PlayerGameHours newRecord = new PlayerGameHours();
         newRecord.setPlayer(player);
         newRecord.setGame(game);
         newRecord.setHours(hours);
         playerGameHoursRepository.save(newRecord);
     } else {
-        // Si existe un registro, se suman las horas jugadas y se actualiza
         existingRecord.setHours(existingRecord.getHours() + hours);
         playerGameHoursRepository.save(existingRecord);
     }
@@ -96,14 +94,20 @@ public class PlayerGameHoursService {
     @Transactional
     public List<TopPlayerForGameDto> getTop10PlayersByGame(String gameName) {
         Game game = gameRepository.findByName(gameName);
-        List<TopPlayerForGameDto> playerGameHoursList = playerGameHoursRepository.findTop10PlayersSumHoursByGameOrderByHoursDesc(game.getId())
-                .subList(0, 10);
-        return playerGameHoursList;
+        List<TopPlayerForGameDto> playerGameHoursList = playerGameHoursRepository
+                .findTop10PlayersSumHoursByGameOrderByHoursDesc(game.getId());
+               int numGames = playerGameHoursList.size();
+        if (numGames < 10) {
+            for (int i = numGames; i < 10; i++) {
+                playerGameHoursList.add(new TopPlayerForGameDto("", 0));
+            }
+        }
+        return playerGameHoursList.subList(0, 10);
     }
 
     @Transactional
-    public List<TopGameForPlayerDto> getTop10GamesByPlayerId(Long playerId) {
-        Player player = playerRepository.getPlayerById(playerId);
+    public List<TopGameForPlayerDto> getTop10GamesByPlayerId(String playerId) {
+        Player player = playerRepository.getByUsername(playerId);
         List<TopGameForPlayerDto> playerGameHoursList = playerGameHoursRepository
                 .findTop10GamesByPlayerIdOrderByHoursDesc(player.getId());
         int numGames = playerGameHoursList.size();
