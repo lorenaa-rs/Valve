@@ -2,20 +2,20 @@ package com.valve.api.dto;
 
 import com.valve.api.entities.PlayerGameHours;
 
-public class PlayerGameHoursDto {
+public class TopPlayerForGameDto {
 
     private String playerName;
     private Integer hours;
 
-    public PlayerGameHoursDto() {
+    public TopPlayerForGameDto() {
     }
 
-    public PlayerGameHoursDto(String playerName, Integer hours) {
+    public TopPlayerForGameDto(String playerName, Integer hours) {
         this.playerName = playerName;
         this.hours = hours;
     }
 
-    public PlayerGameHoursDto(PlayerGameHours playerGameHours) {
+    public TopPlayerForGameDto(PlayerGameHours playerGameHours) {
         this.playerName = playerGameHours.getPlayer().getFirstName();
         this.hours = playerGameHours.getHours();
     }

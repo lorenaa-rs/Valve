@@ -1,15 +1,22 @@
 package com.valve.api.services;
 
-import com.valve.api.dto.PlayerGameHoursDto;
+import com.valve.api.dto.TopGameForPlayerDto;
+import com.valve.api.dto.TopPlayerForGameDto;
 import com.valve.api.entities.Game;
+import com.valve.api.entities.Player;
 import com.valve.api.entities.PlayerGameHours;
 import com.valve.api.repositories.GameRepository;
 import com.valve.api.repositories.PlayerGameHoursRepository;
+import com.valve.api.repositories.PlayerRepository;
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +26,8 @@ public class PlayerGameHoursService {
     private PlayerGameHoursRepository playerGameHoursRepository;
     @Autowired
     private GameRepository gameRepository;
+    @Autowired
+    private PlayerRepository playerRepository;
 
     public List<PlayerGameHours> getAllPlayerGameHours() {
         return playerGameHoursRepository.findAll();
@@ -61,11 +70,26 @@ public class PlayerGameHoursService {
     }
 
     @Transactional
-    public List<PlayerGameHoursDto> getTop10PlayersByGame(String gameName) {
+    public List<TopPlayerForGameDto> getTop10PlayersByGame(String gameName) {
         Game game = gameRepository.findByName(gameName);
-        List<PlayerGameHoursDto> playerGameHoursList = playerGameHoursRepository.findTop10PlayersSumHoursByGameOrderByHoursDesc(game.getId())
+        List<TopPlayerForGameDto> playerGameHoursList = playerGameHoursRepository.findTop10PlayersSumHoursByGameOrderByHoursDesc(game.getId())
                 .subList(0, 10);
         return playerGameHoursList;
     }
+    
+    @Transactional
+    public List<TopGameForPlayerDto> getTop10GamesByPlayerId(Long playerId) {
+        Player player = playerRepository.getPlayerById(playerId);
+        List<TopGameForPlayerDto> playerGameHoursList = playerGameHoursRepository
+                .findTop10GamesByPlayerIdOrderByHoursDesc(player.getId());
+        int numGames = playerGameHoursList.size();
+        if (numGames < 10) {
+            for (int i = numGames; i < 10; i++) {
+                playerGameHoursList.add(new TopGameForPlayerDto("", 0));
+            }
+        }
+        return playerGameHoursList.subList(0, 10);
+    }
+
 
 }
