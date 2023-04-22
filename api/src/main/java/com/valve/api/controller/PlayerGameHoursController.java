@@ -4,6 +4,7 @@ import com.valve.api.dto.PlayerGameHoursDto;
 import com.valve.api.dto.*;
 import com.valve.api.entities.*;
 import com.valve.api.services.*;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +30,8 @@ public class PlayerGameHoursController {
         playerGameHours.setPlayer(playerService.getPlayerById(playerGameHoursDTO.getPlayerId()));
         playerGameHours.setGame(gameService.getGameById(playerGameHoursDTO.getGameId()));
         playerGameHourService.createPlayerGameHours(playerGameHours.getPlayer(), playerGameHours.getGame(), playerGameHours.getHours());
-        return playerGameHours.getHours() +" horas agregadas al jugador: " + playerGameHours.getPlayer().getUsername()+
-                "del juego: " + playerGameHours.getGame().getName();
+        return playerGameHours.getHours() + " horas agregadas al jugador: " + playerGameHours.getPlayer().getUsername()
+                + "del juego: " + playerGameHours.getGame().getName();
     }
 
     @DeleteMapping("/deleteHours")
@@ -42,7 +43,6 @@ public class PlayerGameHoursController {
         return ResponseEntity.ok(totalHours);
     }
 
-    
     @PutMapping("/updateHours")
     public ResponseEntity<Integer> updateHours(@RequestBody PlayerGameHoursDto playerGameHoursDTO) {
 
@@ -55,24 +55,36 @@ public class PlayerGameHoursController {
     @GetMapping("/top10players/{gameName}")
     public ResponseEntity<List<TopPlayerForGameDto>> getTop10PlayersByGame(@PathVariable String gameName) {
         List<TopPlayerForGameDto> topPlayersList = playerGameHourService.getTop10PlayersByGame(gameName);
+        if (topPlayersList == null || topPlayersList.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
         return ResponseEntity.ok(topPlayersList);
     }
 
     @GetMapping("/top10games/{userName}")
     public ResponseEntity<List<TopGameForPlayerDto>> getTop10GamesByPlayerId(@PathVariable String userName) {
         List<TopGameForPlayerDto> topGameList = playerGameHourService.getTop10GamesByPlayerId(userName);
+        if (topGameList == null || topGameList.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
         return ResponseEntity.ok(topGameList);
     }
 
     @GetMapping("/top10games")
     public ResponseEntity<List<TopGamesDto>> getTop10Games() {
         List<TopGamesDto> topGameList = playerGameHourService.getTop10Games();
+        if (topGameList == null || topGameList.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
         return ResponseEntity.ok(topGameList);
     }
 
     @GetMapping("/top10players")
     public ResponseEntity<List<TopPlayersDto>> getTop10Players() {
         List<TopPlayersDto> topPlayersList = playerGameHourService.getTop10players();
+        if (topPlayersList == null || topPlayersList.isEmpty()) {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
         return ResponseEntity.ok(topPlayersList);
     }
 

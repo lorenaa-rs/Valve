@@ -3,6 +3,7 @@ package com.valve.api.services;
 import com.valve.api.dto.*;
 import com.valve.api.entities.*;
 import com.valve.api.repositories.*;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -32,22 +33,22 @@ public class PlayerGameHoursService {
     }
 
     public void createPlayerGameHours(Player player, Game game, Integer hours) {
-    PlayerGameHours existingRecord = getPlayerGameHours(player, game);
-    if (existingRecord == null) {
-        PlayerGameHours newRecord = new PlayerGameHours();
-        newRecord.setPlayer(player);
-        newRecord.setGame(game);
-        newRecord.setHours(hours);
-        playerGameHoursRepository.save(newRecord);
-    } else {
-        existingRecord.setHours(existingRecord.getHours() + hours);
-        playerGameHoursRepository.save(existingRecord);
+        PlayerGameHours existingRecord = getPlayerGameHours(player, game);
+        if (existingRecord == null) {
+            PlayerGameHours newRecord = new PlayerGameHours();
+            newRecord.setPlayer(player);
+            newRecord.setGame(game);
+            newRecord.setHours(hours);
+            playerGameHoursRepository.save(newRecord);
+        } else {
+            existingRecord.setHours(existingRecord.getHours() + hours);
+            playerGameHoursRepository.save(existingRecord);
+        }
     }
-}
-    private PlayerGameHours getPlayerGameHours(Player player, Game game) {
-    return playerGameHoursRepository.findByPlayerAndGame(player, game);
-}
 
+    private PlayerGameHours getPlayerGameHours(Player player, Game game) {
+        return playerGameHoursRepository.findByPlayerAndGame(player, game);
+    }
 
     public PlayerGameHours savePlayerGameHours(PlayerGameHours playerGameHours) {
         return playerGameHoursRepository.save(playerGameHours);
@@ -57,18 +58,17 @@ public class PlayerGameHoursService {
         PlayerGameHours playerGameHoursList = playerGameHoursRepository.findByPlayerAndGame(player, game);
         playerGameHoursList.setHours(hoursUpdate);
         playerGameHoursRepository.save(playerGameHoursList);
-         return hoursUpdate;
-        }
-    
+        return hoursUpdate;
+    }
 
     public Integer deletePlayerGameHours(Player player, Game game, Integer hoursToDelete) {
         PlayerGameHours playerGameHoursList = playerGameHoursRepository.findByPlayerAndGame(player, game);
-        if (playerGameHoursList==null) {
+        if (playerGameHoursList == null) {
             return 0;
         }
         Integer totalHours = playerGameHoursList.getHours();
         if (totalHours <= hoursToDelete) {
-           playerGameHoursRepository.delete(playerGameHoursList);
+            playerGameHoursRepository.delete(playerGameHoursList);
             return 0;
         } else {
             totalHours -= hoursToDelete;
@@ -96,13 +96,13 @@ public class PlayerGameHoursService {
         Game game = gameRepository.findByName(gameName);
         List<TopPlayerForGameDto> playerGameHoursList = playerGameHoursRepository
                 .findTop10PlayersSumHoursByGameOrderByHoursDesc(game.getId());
-               int numGames = playerGameHoursList.size();
-        if (numGames < 10) {
-            for (int i = numGames; i < 10; i++) {
-                playerGameHoursList.add(new TopPlayerForGameDto("", 0));
-            }
+       if (playerGameHoursList.isEmpty()) {
+            return Collections.emptyList();
+        } else if (playerGameHoursList.size() < 10) {
+            return playerGameHoursList;
         }
         return playerGameHoursList.subList(0, 10);
+    
     }
 
     @Transactional
@@ -110,23 +110,20 @@ public class PlayerGameHoursService {
         Player player = playerRepository.getByUsername(playerId);
         List<TopGameForPlayerDto> playerGameHoursList = playerGameHoursRepository
                 .findTop10GamesByPlayerIdOrderByHoursDesc(player.getId());
-        int numGames = playerGameHoursList.size();
-        if (numGames < 10) {
-            for (int i = numGames; i < 10; i++) {
-                playerGameHoursList.add(new TopGameForPlayerDto("", 0));
-            }
+       if (playerGameHoursList.isEmpty()) {
+            return Collections.emptyList();
+        } else if (playerGameHoursList.size() < 10) {
+            return playerGameHoursList;
         }
         return playerGameHoursList.subList(0, 10);
     }
-
     @Transactional
     public List<TopGamesDto> getTop10Games() {
         List<TopGamesDto> playerGameHoursList = playerGameHoursRepository.findTop10GamesByHoursDesc();
-        int numGames = playerGameHoursList.size();
-        if (numGames < 10) {
-            for (int i = numGames; i < 10; i++) {
-                playerGameHoursList.add(new TopGamesDto("", 0));
-            }
+        if (playerGameHoursList.isEmpty()) {
+            return Collections.emptyList();
+        } else if (playerGameHoursList.size() < 10) {
+            return playerGameHoursList;
         }
         return playerGameHoursList.subList(0, 10);
     }
@@ -134,13 +131,13 @@ public class PlayerGameHoursService {
     @Transactional
     public List<TopPlayersDto> getTop10players() {
         List<TopPlayersDto> playerGameHoursList = playerGameHoursRepository.findTop10PlayersByHoursDesc();
-        int numGames = playerGameHoursList.size();
-        if (numGames < 10) {
-            for (int i = numGames; i < 10; i++) {
-                playerGameHoursList.add(new TopPlayersDto("", 0));
-            }
+        if (playerGameHoursList.isEmpty()) {
+            return Collections.emptyList();
+        } else if (playerGameHoursList.size() < 10) {
+            return playerGameHoursList;
         }
         return playerGameHoursList.subList(0, 10);
     }
+
 
 }
